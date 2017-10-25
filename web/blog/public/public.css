@@ -1,0 +1,244 @@
+.clearfix:after{content:".";display:block;height:0;clear:both;visibility:hidden}
+.clearfix{*+height:1%;}
+body{
+  color: black;
+}
+.ant-carousel .slick-slide{
+  text-align: center;
+  max-height: 260px;
+
+  position: relative;
+  margin-top: 10px;
+  background: #364d79;
+  color: #fff;
+  overflow: hidden;
+}
+.ant-carousel .slick-slide img{
+  width: 100%;
+  height: 100%;
+}
+.ant-carousel .slick-slide h3{
+  position: absolute;
+bottom: 5px;
+  z-index: 111;
+}
+.ant-card{
+  text-align: left;
+  margin-top: 20px;
+}
+
+.ant-card-abs{
+  z-index: 111;
+  transition:  all .4s;
+  opacity: 0;
+  position: absolute;
+  right: 14px;
+  bottom: 0px;
+}
+.ant-card:hover .ant-card-abs{
+  opacity: 1;
+}
+.articleContent{
+  transition: all 1s;
+  margin-bottom: 20px;
+  line-height: 1.8;
+}
+.articleContent h1{
+  font-size: 22px;
+}
+.articleContent p{
+  margin-top: 1em;
+  margin-left: 1em;
+}
+.articleContent pre{
+  overflow: auto;
+  background-color: rgb(241,241,241);
+  margin: 15px 0;
+}
+.articleContent ul,ol{
+  margin-top: 1em;
+  margin-left: 3em;
+}
+.articleCard{
+  transition: all 1s;
+}
+
+.rotate{
+  display: inline-block;
+  line-height: 16px!important;
+  transition: all .8s;
+}
+.ant-card:hover .rotate{
+
+  animation: rota 1.4s ease-out infinite;
+}
+@keyframes rota {
+  50%{
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+    transform-origin: 50% 50%;
+  }
+}
+.ant-menu-item-selected a{
+  color: #108ee9!important;
+}
+
+
+
+.ant-tabs:not(.ant-tabs-vertical) > .ant-tabs-content > .ant-tabs-tabpane-inactive{
+  display: none;
+}
+
+/*!* 评论卡片 *!
+.commentCard{
+  position: relative;
+}
+.commentCard .ant-spin-dot{
+  position: absolute;
+  z-index: 1111;
+  top: 24px;
+  left: 45%;
+}*/
+
+/*颜色改变*/
+body .ant-tag{
+  padding: 0 10px;
+ background: transparent;
+  border-radius: 50px;
+}
+
+/*搜索关键字的样式*/
+.sKey{
+
+  color: #c00;
+}
+.icon-weibo1:hover{
+  color: rgb(243,38,31);
+}
+.icon-zhihu:hover{
+  color: rgb(19,137,233)
+}
+.icon-githubsquare:hover{
+  color: rgb(19,34,122);
+}
+.icon-youxiang:hover{
+  color: rgb(60,178,103)
+}
+
+.ant-card-body .ant-tag{
+  transition: all .3s;
+
+}
+
+.ant-card-body:hover .ant-tag{
+
+display: inline-block;
+  height: 22px;
+}
+body .ant-card-bordered {
+  border: 1px solid rgb(211,211,211);
+}
+body .ant-card-head {
+  border-bottom: 1px solid rgb(211,211,211);
+}
+
+.none{
+  display: none;
+}
+.process {
+  border: 10px solid transparent;
+  border-left: 20px solid #f00;
+  width: 0;
+  height: 0px;
+}
+body .goTop{
+  color: rgb(180,180,180);
+  font-size: 60px;
+  position: fixed;
+  right: 50px;
+  bottom: 50px;
+  cursor: pointer;
+  animation: cColor .4s linear;
+}
+body .go{
+  color: rgb(18,150,219);
+  animation: rotate .8s linear forwards;
+}
+@keyframes cColor {
+
+  50%{
+    color: rgb(18,150,219);
+  }
+  100%{
+    color: rgb(180,180,180);
+  }
+}
+@keyframes cColorFire {
+
+  50%{
+    color: rgb(216,30,6);
+  }
+  100%{
+    color: rgb(180,180,180);
+  }
+}
+@keyframes rotate {
+  80%{
+
+    transform: rotateY(1080deg);
+    bottom: 120px;
+  }
+  100%{
+    bottom: 1100px;
+
+  }
+}
+body .fire{
+  animation: cColorFire .4s linear;
+  bottom: -2px;
+  left: 18px;
+  font-size: 24px;
+  transform: rotate(180deg);
+;
+}
+body .goTop:hover .fire{
+  color: rgb(216,30,6);
+}
+body .goTop:hover {
+  color: rgb(18,150,219);
+}
+
+.ant-card-body img {
+  max-width: 100%;
+}
+
+
+.catelog{
+padding: 10px;
+  width: 250px;
+  border-top:1px solid rgb(233,233,233);
+}
+.catelog li{
+  color: rgb(200,200,200);
+  font-weight: 700;
+  cursor: pointer;
+  line-height: 25px;
+  margin-top: 5px;
+  font-size: 14px;
+}
+.catelog li:not(:first-child):hover{
+  color: rgb(16,142,233);
+}
+.catelogAbs{
+  position: absolute;
+  top: -25px;
+  left: -300px;
+}
+body .ant-message{
+  z-index: 100001;
+}
+.moduleTitle{
+  font-size: 16px;
+}

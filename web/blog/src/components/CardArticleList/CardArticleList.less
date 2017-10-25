@@ -1,0 +1,67 @@
+.blank{
+  height: 500px;
+  display: block;
+  text-align: center;
+  font-size: 30px;
+  padding-top: 100px;
+}
+
+.articleCard{
+  &:hover{
+    .apHover,.articleTitle{
+      left: 50px;
+    }
+    .tagGroup{
+      left: 30px;
+    }
+    box-shadow: 0 5px 8px rgb(211,211,211)!important;
+  }
+  :global{
+    .ant-card-body{
+      padding: 40px 26px 24px 56px
+    }
+    .commentCard{
+      .ant-card-body{
+        padding: 15px
+      }
+    }
+  }
+}
+.apHover{
+  transition: left .3s ;
+  position: relative;
+  left: 20px;
+}
+.articleTitle{
+  font-size: 18px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  .apHover;
+}
+.tagGroup{
+  margin-left: 20px;
+  transition: all .3s ;
+  position: relative;
+  left: 0;
+  margin-top: 15px;
+}
+.cardCname{
+  padding: 5px;
+  border-bottom: 1px solid  rgb(211,211,211);
+  border-right: 1px solid  rgb(211,211,211);
+  transition:  all .4s;
+  opacity: 1;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.por{
+  position: relative;
+}
+.click,.comment{
+  margin-left: 15px;
+}
+.tagIcon{
+  font-size: 16px;
+  margin-right: 5px;
+}

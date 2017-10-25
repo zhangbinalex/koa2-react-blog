@@ -1,0 +1,148 @@
+@blackShallow:rgba(0,0,0,.6);
+@blackDeep:rgba(0,0,0,.9);
+.container{
+  z-index: 99999;
+  top: 0;
+  position: relative;
+  width: 100%;
+}
+.header{
+  height: 300px;
+  background:no-repeat  ;
+}
+.fixHeader{
+  position: fixed;
+  opacity: 0;
+  visibility: hidden;
+  top: 0;
+  z-index:999999;
+  border-bottom: 1px solid rgb(211,211,211);
+  height: 52px;
+  background: white;
+  width: 100%;
+}
+
+.logoSpan{
+  width: 200px;
+  display: inline-block;
+  overflow: hidden;
+}
+.logo{
+  height: 50px;
+  margin-top: 0;
+  margin-left: 16px;
+}
+.bacKeyword{
+  position: absolute;
+  font-size: 60px;
+  top: 90px;
+  width: 100%;
+  text-align: center;
+  color: white;
+}
+.menuCommon{
+  float: right;
+  border-width: 0;
+  font-size: 16px;
+  line-height: 50px;
+  background: none;
+  color: white;
+}
+.menu{
+  .menuCommon;
+  :global{
+    .ant-menu-item{
+      a{
+        color: white!important;
+      }
+    }
+  }
+}
+.menuFixed{
+  .menuCommon;
+  :global{
+    .ant-menu-item{
+      a{
+        color: @blackDeep;
+      }
+    }
+  }
+}
+.searchBtnGroup{
+  background: none;
+  float: right;
+  line-height: 52px;
+  margin-right:20px;
+}
+.searchBtn{
+  line-height: 1.5;
+  background: none;
+  color:white;
+  border-left: none;
+}
+.searchBtnFixed{
+  line-height: 1.5;
+  color: @blackDeep;
+  border-color: @blackShallow;
+  border-left: none;
+}
+.searchInputCommon{
+  background: none;
+  width: 160px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.searchInput{
+  .searchInputCommon;
+  color: white;
+}
+.searchInputFixed{
+  .searchInputCommon;
+  color: @blackDeep;
+  border-color:@blackShallow;
+}
+.fadeBacImg{
+  background-size:100% 300px ;
+  transition: 1s all;
+  height: 300px;
+  width: 100%;
+  position: absolute;
+  z-index: -2;
+  left: 0;
+  opacity: 0;
+  top: 0;
+}
+.fadeActive{
+  z-index: -1;
+  opacity: 1;
+}
+
+
+
+
+  .fadeOut{
+
+    animation: fadeOut .6s forwards;
+  }
+  .fadeIn{
+    visibility: visible;
+    animation: fadeIn .6s forwards;
+  }
+  @keyframes fadeOut {
+    0%{
+      visibility: visible;
+      opacity: 0.9;
+    }
+    100%{
+      visibility: hidden;
+      opacity: 0;
+    }
+  }
+  @keyframes fadeIn {
+    100%{
+      opacity: 0.9;
+    }
+  }
+
+

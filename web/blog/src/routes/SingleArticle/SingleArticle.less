@@ -1,0 +1,238 @@
+.logout{
+  font-size: 14px;
+  color: black;
+}
+.doneCard{
+  display: block;
+  animation: show .8s forwards ease-out;
+  transform: scaleX(0.1);
+  height: 60px;
+  left: 0;
+  top:0;
+}
+.singleCard{
+  z-index: 999;
+  position: inherit;
+  border: none!important;
+  overflow: visible;
+}
+@keyframes show {
+  0% {
+    height: 60px;
+    transform: scaleX(0.1);
+    left: 0px;
+    top: -50px;
+  }
+  50% {
+    height: 60px;
+    transform: scaleX(0.9);
+    left: 0;
+    top: 150px;
+  }
+  99% {
+    height:800px;
+    transform: scale(1);
+    left: 0;
+    top: 0;
+  }
+  100%{
+    transform: scale(1);
+    left: 0;
+    top: 0;
+    height:100%
+  }
+
+}
+.InitCard{
+  display: none;
+}
+.content{
+  padding-bottom: 20px;
+  position: relative;
+}
+.catelog{
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
+  -webkit-transform: translateZ(0);
+  position: absolute;
+  top: -25px;
+  left: -300px;
+  padding: 10px;
+  width: 250px;
+  border-top:1px solid rgb(233,233,233);
+  li{
+    color: rgb(200,200,200);
+    font-weight: 700;
+    cursor: pointer;
+    line-height: 25px;
+    margin-top: 5px;
+    font-size: 14px;
+    padding-left: 8px;
+    &:not(:first-child){
+      &:hover{
+        background: rgb(243,243,243);
+        color: rgb(16,142,233);
+      }
+    }
+  }
+  .catalogActive{
+    background: rgb(243,243,243);
+    color: rgb(16,142,233);
+  }
+  .catelogTitle{
+    font-size: 18px;
+    color: rgb(120,120,120);
+    margin-bottom: 20px;
+  }
+}
+
+.articleHeader{
+  margin-bottom: 20px;
+  position: relative;
+}
+.absTags{
+  position: absolute;
+  margin-left: 15px;
+  float: left;
+}
+.tagIcon{
+  font-size: 16px;
+  margin-right: 5px;
+}
+.sizeI{
+  position: absolute;
+  right: 0;
+  top: -10px;
+  color: rgb(150,150,150);
+  cursor: pointer;
+  &:hover{
+    font-weight: 700;
+    color: black;
+  }
+}
+.articleTitle{
+  font-size: 22px;
+  margin-bottom: 10px;
+  margin-top: 40px;
+  font-weight: bold;
+  text-align: center;
+}
+.articleContent{
+  word-wrap:break-word;
+  transition: all 1s;
+  margin-bottom: 20px;
+  line-height: 1.8;
+  h1{
+    font-size: 22px;
+  }
+  h2{
+    font-size: 18px;
+  }
+  h3{
+    font-size: 16px;
+  }
+  pre{
+    margin-left: 3em;
+    overflow: auto;
+    background-color: rgb(241,241,241);
+    padding: 5px 10px;
+  }
+  ul,ol{
+    margin-top: 1em;
+    margin-left: 3em;
+  }
+  p{
+    margin-bottom: 1em;
+    text-indent: 2em;
+    margin-top: 1em;
+    margin-left: 1em;
+  }
+  blockquote {
+    margin-top: 1em;
+    margin-left: 1em;
+    border-left: 5px solid #f1f1f1;
+    padding-left: 5px;
+  }
+}
+.articleInfo{
+  text-align: center;
+  font-size: 14px;
+  margin-top: 5px;
+  margin-bottom: 20px;
+}
+.click,.comment{
+  margin-left: 15px;
+}
+.commentLi{
+  position: relative;
+  font-size: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgb(233,233,233);
+  &:hover{
+    .replyA{
+      display: block;
+    }
+  }
+}
+.replyA{
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  display: none;
+}
+.commentHeader{
+  height: 27px;
+  margin-bottom: 5px;
+}
+.commentCard{
+  position: relative;
+  :global{
+    .ant-spin-dot{
+      position: absolute;
+      z-index: 1111;
+      top: 24px;
+      left: 45%;
+    }
+  }
+}
+.commentCreateTime{
+  float: right;
+}
+.commentContent{
+  line-height: 25px;
+  margin-bottom: 5px;
+}
+.writeComment{
+  position: relative;
+  padding: 20px 70px 10px 0px;
+}
+.commentBtn{
+  position: absolute!important;
+  right: 5px;
+  bottom: 10px;
+}
+.cancelReply{
+  position: absolute!important;
+  right: 70px;
+  bottom: 0;
+}
+.replyBtn{
+  position: absolute!important;
+  right: 5px;
+  bottom: 0;
+}
+.dropdown{
+  color: black;
+  font-size: 14px;
+  float: left;
+  line-height: 30px;
+}
+.logBtn{
+  cursor: pointer;
+  font-size: 30px!important;
+  color:rgb(18,183,245);
+}
+.catalogActive{
+
+}
