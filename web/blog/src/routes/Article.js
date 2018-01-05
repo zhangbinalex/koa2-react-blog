@@ -11,10 +11,14 @@ class Article extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      urlParams:'',
       articleList:'',
-      childrens:[],
-      loading:true
+      childrens:'',
+      loading:true,
+      activeKey:'all',
+      currentPage:1,
+      pageSize:20,
+      fetchingNext:false,
+      fetchFinish:false
     }
   }
   fetch(type,id){
@@ -25,12 +29,44 @@ class Article extends React.Component{
     }).then((data)=>{
       const articleList=data.data;
       const childrens=data.child;
-      console.log(111,articleList)
       this.setState({articleList,childrens});
       this.props.dispatch({type:'IndexPage/hideArticleLoading'})
     })
   }
+  fetchNext=()=>{
+    if(this.state.fetchFinish) return ;
+    this.props.dispatch({type:'IndexPage/showArticleLoading'});
+    let id=this.state.activeKey==='all'?this.props.location.query.id:this.state.activeKey;
+    this.setState({fetchingNext:true,currentPage:this.state.currentPage+1},()=>{
+      reqwest({
+        url:url+'index/'+this.props.routeParams.type,
+        data:{id,
+          page:this.state.currentPage}
+      }).then((data)=>{
+        const nextArticleList=data.data;
+        if(nextArticleList.length===0){
+          this.setState({fetchFinish:true})
+        }else {
+          if(this.state.activeKey==='all'){
+            this.setState({articleList:[...this.state.articleList,...nextArticleList]})
+          }else {
+            const childrens=[...this.state.childrens];
+            childrens.map((item)=>{
+              if(item.value==this.state.activeKey){
+                item.data=[...item.data,...nextArticleList]
+              }
+            });
+            this.setState({childrens})
+          }
+        }
+
+        this.setState({fetchingNext:false});
+        this.props.dispatch({type:'IndexPage/hideArticleLoading'})
+      })
+    })
+  }
   fetchChildCategory=(activeKey)=>{
+    this.setState({activeKey,currentPage:1,fetchFinish:false});
     if(activeKey!='all'){
       reqwest({
         url:url+'index/'+this.props.routeParams.type,
@@ -38,24 +74,22 @@ class Article extends React.Component{
           id:activeKey
         }
       }).then((data)=>{
-       /* const articleList=data.data;*/
-        const childrens=this.state.childrens;
+        //根据分类的id把请求的文章数据添加到对应的子分类中
+        const childrens=[...this.state.childrens];
         childrens.map((item)=>{
           if(item.value==activeKey){
             item.data=data.data
           }
-        })
-        console.log(activeKey)
+        });
         this.setState({childrens})
-       /* console.log(articleList)
-        this.setState({articleList});*/
+
         this.props.dispatch({type:'IndexPage/hideArticleLoading'})
       })
     }
   }
   componentWillReceiveProps(nextProps){
-    if(this.props.location.search!=nextProps.location.search){
-      this.setState({urlParams:nextProps.location.search})
+    if(this.props.location.search!==nextProps.location.search){
+      this.setState({activeKey:'all',currentPage:1,fetchFinish:false});
       this.fetch(nextProps.routeParams.type,nextProps.location.query.id)
     }
   }
@@ -66,24 +100,27 @@ class Article extends React.Component{
   toTag=(id,name)=>{
     this.context.router.push({pathname:'/article/tag',query:{id,name}})
   }
+  toggleSider=(method)=>{
+    this.props.dispatch({type:'IndexPage/'+method})
+  }
   render(){
     const props={
       fetchChildCategory:this.fetchChildCategory,
       toTag:this.toTag,
       type:this.props.routeParams.type,
       name:this.props.location.query.name,
-      urlParams:this.state.urlParams,
-      addComment:(payload)=>{this.props.dispatch({type:'IndexPage/addComment',payload})},
-      commentList:this.props.IndexPage.commentList,
-      commentLoading:this.props.IndexPage.commentLoading,
-      fetchComment:(aid)=>{this.props.dispatch({type:'IndexPage/fetchComment',payload:{aid:aid}})},
-      toggleSider:(method)=>{this.props.dispatch({type:'IndexPage/'+method})},
+      toggleSider:this.toggleSider,
       articleList:this.state.articleList,
-      childrens:this.state.childrens
+      childrens:this.state.childrens,
+      fetchNext:this.fetchNext,
+      pageSize:this.state.pageSize,
+      onButtom:this.props.IndexPage.onButtom
     };
     return (
       <div style={{position:'relative'}}>
-        <TabsArticle {...props} />
+        <TabsArticle  {...props} />
+        {this.state.fetchingNext?<Spin style={{position:'absolute',bottom:-5,left:'44%'}} tip="正在加载..." size="large"/>:null}
+        {this.state.fetchFinish?<div style={{    color: '#bcbcbc',position:'absolute',bottom:10,left:'40%',fontSize:16}}>没有更多的内容了</div>:null}
       </div>
 
     )

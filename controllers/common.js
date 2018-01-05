@@ -15,7 +15,6 @@ class Common{
     }
     static async get_admin_info(ctx){
         let username=ctx.session.user?ctx.session.user.username:'394971897';
-        console.log(username)
         let info=await Admin.findOne({
             attributes:['avatar','zhihu','github','logo','logoBlack','introduce','email','sina'],
             where:{
@@ -28,7 +27,6 @@ class Common{
     static async set_admin_info(ctx){
         let username=ctx.session.user?ctx.session.user.username:'394971897';
         let {avatar,zhihu,github,logo,logoBlack,introduce,email,sina}=ctx.request.body;
-        console.log(avatar)
         await Admin.update({
             avatar:avatar,zhihu,github,logo,logoBlack,introduce,email,sina
         },{

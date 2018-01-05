@@ -2,6 +2,8 @@ const security=require('../../models/security');
 
 class Security{
     static async logined_info(ctx){
+        /*ctx.body = {ret:1,msg:'已登陆',username:123};*/
+        console.log(ctx.session)
         if (typeof ctx.session.user === 'undefined' ) {
         ctx.body = {ret:0,msg:'未登录'};
         }else {
@@ -15,9 +17,7 @@ class Security{
     }
 
     static async login(ctx){
-        let postData=ctx.request.body;
-        let username=postData.username;
-        let password=postData.password;
+        let {username,password}=ctx.request.body;
         let user=await security.findOne({
             where:{
                 username

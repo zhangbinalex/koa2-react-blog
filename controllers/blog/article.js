@@ -18,7 +18,6 @@ class Article{
             limit:size,
             offset:(page-1)*size
         });
-        console.log(articles)
         if(articles){
             var res=articles.map((article)=>{
                 article.dataValues.tag=article.tags.map((tag)=>{

@@ -5,6 +5,26 @@
   top: 0;
   position: relative;
   width: 100%;
+  .menu{
+    .menuCommon;
+    :global{
+      .ant-menu-item{
+        a{
+          color: white!important;
+        }
+      }
+    }
+  }
+  .menuFixed{
+    .menuCommon;
+    :global{
+      .ant-menu-item{
+        a{
+          color: @blackDeep;
+        }
+      }
+    }
+  }
 }
 .header{
   height: 300px;
@@ -48,26 +68,8 @@
   background: none;
   color: white;
 }
-.menu{
-  .menuCommon;
-  :global{
-    .ant-menu-item{
-      a{
-        color: white!important;
-      }
-    }
-  }
-}
-.menuFixed{
-  .menuCommon;
-  :global{
-    .ant-menu-item{
-      a{
-        color: @blackDeep;
-      }
-    }
-  }
-}
+
+
 .searchBtnGroup{
   background: none;
   float: right;

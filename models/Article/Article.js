@@ -24,8 +24,13 @@ const Article=db.defineModel('articles',{
         type:Sequelize.DATE,
         get(){
             let createAt = this.getDataValue('create_time');
-            let date=dateTransform('yyyy-MM-dd hh:mm:ss',createAt);
-            return date
+            if(createAt){
+                let date=dateTransform('yyyy-MM-dd hh:mm:ss',createAt);
+                return date
+            }else {
+                return null
+            }
+
         }
     },
     update_time:Sequelize.DATE,

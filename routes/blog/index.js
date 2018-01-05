@@ -1,10 +1,9 @@
-const security =require('../../controllers/admin/security');
 const tag =require('../../controllers/admin/tag');
 const category=require('../../controllers/blog/category');
 const article=require('../../controllers/admin/article');
 const articleBlog=require('../../controllers/blog/article');
 const comment=require('../../controllers/blog/comment');
-const common=require('../../controllers/common');
+
 
 const router=require('koa-router')();
 

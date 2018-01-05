@@ -1,18 +1,6 @@
 const category=require('../../models/Category');
 const Icon=require('../../models/Icons');
 
-function getSub(pArr){
-    return Promise.all(pArr.map((categoryFirstLevel)=>{
-        /*console.log(categoryFirstLevel)*/
-
-        return category.findAll({
-            attributes: [['cid','value'],['cname','label'], 'pid','pic_url','icon'],
-            where:{
-                pid:categoryFirstLevel.dataValues.value
-            }
-        });
-    }))
-}
 class Category {
     static async category_info(ctx){
         let categoryListFirstLevel=await category.findAll({
@@ -21,8 +9,14 @@ class Category {
                 pid:1
             }
         });
-
-        const childrens=await getSub(categoryListFirstLevel);
+        let childrens=await Promise.all(categoryListFirstLevel.map((categoryFirstLevel)=>{
+            return category.findAll({
+                attributes: [['cid','value'],['cname','label'], 'pid','pic_url','icon'],
+                where:{
+                    pid:categoryFirstLevel.dataValues.value
+                }
+            });
+        }));
         for(let i=0;i<categoryListFirstLevel.length;i++){
             categoryListFirstLevel[i].dataValues.children = childrens[i]
         }

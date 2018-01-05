@@ -12,13 +12,11 @@ import Directory from 'react-article-directory'
 const TabPane = Tabs.TabPane;
 
 class IndexPage extends React.Component{
-  callback(activeKey){
-  console.log(activeKey)
-  }
   constructor(props) {
     super(props);
     this.state = {
       articleList: [],
+      tagList:[],
       active:null,
       menuList:[],
       newestArticle:[],
@@ -28,21 +26,19 @@ class IndexPage extends React.Component{
       scrollTop:0,
       go:false,
       bacList:[],
-      activeRoute:''
+      activeRoute:null,
     }
   }
   componentWillReceiveProps(nextProps){
-    console.log(nextProps.location.pathname)
-   var routeList= nextProps.location.pathname.substring(1).split('/')
-    console.log(routeList);
-    var activeRoute=''
+    let routeList= nextProps.location.pathname.substring(1).split('/');
+    let activeRoute
     if(!routeList[0]){
        activeRoute='home'
     }else{
-      if (routeList[0]!='article'){
+      if (routeList[0]!=='article'){
          activeRoute=routeList[0]
       }else {
-        if(routeList[1]=='tag'){
+        if(routeList[1]==='tag'){
            activeRoute='tag'
         }else {
            activeRoute=nextProps.location.query.name
@@ -52,7 +48,13 @@ class IndexPage extends React.Component{
     this.setState({activeRoute})
   }
   handleScroll=(e)=>{
-    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    let maxScrollTop=(document.body.scrollHeight||document.documentElement.scrollHeight)-
+      (document.body.clientHeight||document.documentElement.clientHeight);
+    let scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    let onBottom=maxScrollTop===scrollTop;
+    if(onBottom!==this.props.IndexPage.onBottom){
+      this.props.dispatch({type:'IndexPage/setOnBottom',payload:maxScrollTop===scrollTop});
+    }
     this.setState({
       scrollTop:!!scrollTop
     })
@@ -84,20 +86,16 @@ class IndexPage extends React.Component{
       });
 
 
-    window.addEventListener('scroll',this.handleScroll)
-    document.body.scrollTop=0
-    reqwest({url:url+'admin/article/get'}).then((data)=>{
-        const articleList=data.data
-      if(data.data.length>5){
-         var newestArticle= data.data.slice(0,5)
-      }else {
-        var newestArticle=[...data.data]
-      }
-      this.setState({articleList,newestArticle})
-    })
+    window.addEventListener('scroll',this.handleScroll);
+    document.body.scrollTop=0;
+    reqwest({url: url + 'admin/article/get'}).then((data) => {
+      const articleList = data.data;
+      let newestArticle=articleList.length>5?articleList.slice(0, 5):[...articleList];
+      this.setState({articleList, newestArticle})
+    });
     reqwest({url:url+'get_top_category'}).then((data)=>{
       const menuList=data.data.map((item)=>{
-        return {label:item.label,icon:item.icon,url:item.pic_url,value:item.value}
+        return {label: item.label, icon: item.icon, url: item.pic_url, value: item.value}
       });
       const bacList=data.data.map((item)=>{
         return {label:item.label,url:item.pic_url}
@@ -105,10 +103,18 @@ class IndexPage extends React.Component{
       bacList.push({label:'home',url:'http://i4.bvimg.com/608112/aa08b9ac86a5da5f.jpg'},
         {label:'singleArticle',url:'http://i4.bvimg.com/608112/2217625fb504ba28.png'},
         {label:'search',url:'http://i4.bvimg.com/608112/f5616d00d24645ea.png'},
-        {label:'tag',url:'http://i4.bvimg.com/608112/494cda5930835cef.png'})
+        {label:'tag',url:'http://i4.bvimg.com/608112/494cda5930835cef.png'});
       this.setState({menuList,bacList})
     })
-    /*  this.setState({current:this.props.location.query.name})*/
+    reqwest({
+      url:url+'admin/tags_info',
+    }).then((data)=>{
+      if(data.ret){
+        let tagList=data.data.map((item)=>({label:item.tname,tid:item.tid}))
+        this.setState({tagList});
+      }
+    })
+
   }
   componentWillUnmount(){
     window.removeEventListener('scroll',this.handleScroll)
@@ -116,27 +122,11 @@ class IndexPage extends React.Component{
   toTag=(id,name)=>{
     this.context.router.push({pathname:'/article/tag',query:{id,name}})
   }
-  showArticle(index){
-    var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
-    if(scrollTop>80){
-      scrollTop=80
-    }
-    this.props.dispatch({type:'IndexPage/hideS'})
-    this.setState({active:index})
-  }
-  hideArticle(){
-    var scrollTop = document.documentElement.scrollTop||document.body.scrollTop;
-    if(scrollTop>80){
-      scrollTop=80
-    }
-    this.props.dispatch({type:'IndexPage/showS'})
-    this.setState({active:null})
-  }
-  searchArticle(key){
+  searchArticle=(key)=>{
     if(key){
-      this.context.router.push({pathname:'search/'+key})
+      this.context.router.push({pathname:'/search/'+key})
     }else {
-      this.context.router.push({pathname:'home'})
+      this.context.router.push({pathname:'/home'})
     }
   }
   slideInit=(e)=>{
@@ -183,7 +173,7 @@ class IndexPage extends React.Component{
     return (
       <div  onMouseUp={this.slideOver} className={'clearfix '+styles.app} >
         {/*头部*/}
-        <Header logo={this.props.IndexPage.setting.logo} logoBlack={this.props.IndexPage.setting.logoBlack} scrollTop={this.state.scrollTop} activeRoute={this.state.activeRoute} searchArticle={(key)=>{this.searchArticle(key)}} menuList={this.state.menuList} bacList={this.state.bacList}    />
+        <Header logo={this.props.IndexPage.setting.logo} logoBlack={this.props.IndexPage.setting.logoBlack} scrollTop={this.state.scrollTop} activeRoute={this.state.activeRoute} searchArticle={this.searchArticle} menuList={this.state.menuList} bacList={this.state.bacList}    />
         {/*进度条*/}
         <Progress strokeWidth={4} showInfo={false} className={styles.pro} percent={this.state.percent} />
         {/*内容区*/}
@@ -193,13 +183,13 @@ class IndexPage extends React.Component{
           <Directory
             ref='directory'
             refresh={this.props.IndexPage.directoryRefresh}
-            title="目录" id="article" offset={52} style={{topAbs:380,topFix:60}} />:''}
+            title="目录" id="article" offset={52} style={{topAbs:380,topFix:60}} />:null}
 
 
         <Col style={{marginTop:40}} span={14} offset={5}>
           <Col   style={{minHeight:1000}} span={this.props.IndexPage.showSider?16:23} >
             <div >
-              {this.props.IndexPage.articleLoading?<Spin size="large" className={styles.spin} />:''}
+              {this.props.IndexPage.articleLoading?<Spin size="large" className={styles.spin} />:null}
               {this.props.children}
             </div>
           </Col>
@@ -207,18 +197,18 @@ class IndexPage extends React.Component{
           {this.props.IndexPage.showSider?
             <Col className={styles.rContent} style={{overflow:'hidden'}} onMouseDown={this.slideInit} onMouseMove={this.sliding}  span={7} offset={1} >
               <div style={{position:'relative',left:this.state.moveX}} className={this.state.InitX?'':styles.transition} >
-                <TagList toTag={this.toTag }  />
+                <TagList toTag={this.toTag }  tagList={this.state.tagList} />
                 <Introduce {...introduceInfo} />
                 <NewestArticleList newestArticle={this.state.newestArticle}/>
               </div>
-          </Col>:''}
+          </Col>:null}
         </Col>
         {/*小火箭*/}
         {this.state.scrollTop?
           <i  onClick={this.goTop} className={this.state.go?'goTop go icon-huojiancopy iconfont':'goTop icon-huojiancopy iconfont'}  >
             <i  style={{position:'absolute',color:this.state.go?'red':''}} className="icon-huo3 iconfont fire " />
           </i>
-          :''}
+          :null}
       </div>
     );
   }

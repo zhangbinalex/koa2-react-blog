@@ -11,9 +11,7 @@ class singleArticle extends React.Component{
   constructor(props) {
     super(props);
     this.state={
-      urlParams:'',
       article:'',
-      loading:true,
       commentLoading:false,
       commentList:[],
       commentValue:''
@@ -25,7 +23,7 @@ class singleArticle extends React.Component{
       url:url+'admin/article/get',
       data:{aid:id,type:'click'}
     }).then((data)=>{
-      if(data.ret===1){
+      if(data.ret){
         const article=data.data;
         this.setState({article},()=>{
           setTimeout(()=>{
@@ -41,12 +39,8 @@ class singleArticle extends React.Component{
     })
   }
   componentWillReceiveProps(nextProps){
-    this.setState({commentList:nextProps.IndexPage.commentList})
-    if(!nextProps.commentLoading){
-      this.setState({commentLoading:false,commentValue:''})
-    }
     if(this.props.routeParams.id!==nextProps.routeParams.id){
-      this.fetch(nextProps.routeParams.id)
+      this.fetch(nextProps.routeParams.id);
       this.fetchComment(nextProps.routeParams.id)
     }
     if(this.props.IndexPage.showSider!==nextProps.IndexPage.showSider){
@@ -55,7 +49,22 @@ class singleArticle extends React.Component{
     }
   }
   fetchComment(id){
-    this.props.dispatch({type:'IndexPage/fetchComment',payload:{aid:id}})
+    this.setState({commentLoading:true});
+    reqwest({
+      url:url+'comment/get',
+      data:{aid:id},
+      method:'get',
+    }).then((data)=>{
+      let commentList;
+      if(data.ret){
+        if(data.data){
+          commentList=data.data
+        }else {
+           commentList=[]
+        }
+        this.setState({commentList,commentLoading:false})
+      }
+    })
   }
   componentDidMount(){
     document.body.scrollTop=0;
@@ -75,7 +84,19 @@ class singleArticle extends React.Component{
   addComment(aid,cmid,replyContent){
     if(this.props.IndexPage.userInfo.isLogin){
       this.setState({commentLoading:true})
-      this.props.dispatch({type:'IndexPage/addComment',payload:{content:cmid?replyContent:this.state.commentValue,aid,...this.props.IndexPage.userInfo,pid:cmid?cmid:''}})
+      reqwest({
+        url:url+'comment/add',
+        method:'post',
+        data:{
+          content:cmid?replyContent:this.state.commentValue,
+          aid,...this.props.IndexPage.userInfo,
+          pid:cmid?cmid:''}
+      }).then((data)=>{
+        if(data.ret){
+          message.success('评论添加成功！')
+          this.fetchComment(aid)
+        }
+      })
     }else {
       notification['warning']({
         placement:'bottomLeft',
@@ -84,8 +105,8 @@ class singleArticle extends React.Component{
     }
   }
   setReply(e,index){
-    let commentList=this.state.commentList
-    commentList[index].replyContent=e.target.value
+    let commentList=this.state.commentList;
+    commentList[index].replyContent=e.target.value;
     this.setState({commentList})
   }
   replyComment(index){
@@ -95,20 +116,20 @@ class singleArticle extends React.Component{
           message: '请先登录！',
         });
       }else {
-        let commentList=this.state.commentList
-        commentList[index].reply=true
+        let commentList=this.state.commentList;
+        commentList[index].reply=true;
         this.setState({commentList})
       }
   }
   cancelReply(index){
-    let commentList=this.state.commentList
+    let commentList=this.state.commentList;
     commentList[index].replyContent='';
     commentList[index].reply=false
     this.setState({commentList})
   }
   toTag=(id,name)=>{
     this.context.router.push({pathname:'article/tag',query:{id,name}})
-  }
+  };
   render(){
     const menu = (
       <Menu>
@@ -123,27 +144,35 @@ class singleArticle extends React.Component{
       url:url+'index/index/'+this.props.routeParams.type,
       name:this.props.location.query.name
     }
+    let showSider=this.props.IndexPage.showSider;
+    let iStyle={
+        style:{
+          fontSize:showSider?20:23
+        },
+        className:`${styles.sizeI} iconfont ${showSider?'icon-quanping1 ':'icon-suoxiaotuichuquanpingshouhui'}`,
+        onClick:()=>{this.props.dispatch({type:`IndexPage/${showSider?'hideS':'showS'}`})}
+    };
+
     return (
       <div  >
-        <Card   className={styles.singleCard+' '+(this.state.article.content?styles.doneCard:styles.InitCard) }         >
+        <Card   className={styles.singleCard+' '+(this.state.article?styles.doneCard:styles.InitCard) }         >
           <div ref="car" className={styles.content}>
 
             <div className="ant-card-abs">
              <a onClick={()=>{window.history.go(-1)}} >返回 <Icon className="rotate" type="up" /></a>
             </div>
             <div className={"clearfix "+styles.articleHeader} >
-              {this.state.article.tag?
-                <span className={styles.absTags}>{this.state.article.tag.length>0?<Icon className={styles.tagIcon} type="tag-o" />:''} {this.state.article.tags.map((tag,index)=>{
+              {this.state.article.tags?
+                <span className={styles.absTags}>{this.state.article.tags.length>0?<Icon className={styles.tagIcon} type="tag-o" />:null} {this.state.article.tags.map((tag,index)=>{
                   const randomColor=colorList[parseInt(Math.random()*colorList.length)]
-                  return <Tag onClick={()=>{this.toTag(tag.tid,tag.tname)}}   key={index} style={{borderColor:randomColor,color:randomColor }} >{tag.tname}</Tag>
+                  return <Tag onClick={()=>{this.toTag(tag.tid,tag.tname)}}
+                              key={index}
+                              style={{borderColor:randomColor,color:randomColor }} >
+                            {tag.tname}
+                          </Tag>
                 })}</span>:
-              ''}
-
-              {this.props.IndexPage.showSider?
-                <i onClick={()=>{this.props.dispatch({type:'IndexPage/hideS'})}} style={{fontSize:20  }}  className={"icon-quanping1 iconfont " +styles.sizeI}></i>
-                :
-                <i onClick={()=>{this.props.dispatch({type:'IndexPage/showS'})}} style={{fontSize:23  }}  className={"icon-suoxiaotuichuquanpingshouhui  iconfont " +styles.sizeI}></i>
-              }
+              null}
+              <i {...iStyle}/>
             </div>
             <p  className={styles.articleTitle} >{this.state.article.title}</p>
             <p className={styles.articleInfo}>
@@ -160,12 +189,11 @@ class singleArticle extends React.Component{
                   return (
                     <li key={index}  className={styles.commentLi}>
                       <div className={styles.commentHeader}>
-
                         <img style={{float:'left',width:20,height:20,borderRadius:2,marginRight:6}} src={comment.avatar?comment.avatar:''} />
                         <span style={{float:'left',lineHeight:'20px'}}>{comment.username?comment.username:'游客'}</span>
                         {comment.pUsername?
                           <span><span style={{fontSize:10,marginRight:8,marginLeft:8,color:'#108ee9'}}>回复</span>{comment.pUsername}</span>
-                          :''
+                          :null
                         }
                         <span className={styles.commentCreateTime}>
                             {comment.create_time}
@@ -184,7 +212,7 @@ class singleArticle extends React.Component{
                         </div>
                       :
                         <a className={styles.replyA} onClick={()=>{this.replyComment(index)}}>回复</a>
-                      :''}
+                      :null}
 
                     </li>
                   )
@@ -192,7 +220,7 @@ class singleArticle extends React.Component{
               </ul>
               <div className={styles.writeComment}>
 
-                {this.state.commentLoading?<Spin  />:''}
+                {this.state.commentLoading?<Spin  />:null}
                 <Input type="textarea"  placeholder="请输入评论..." value={this.state.commentValue}  onChange={(e)=>{this.setState({commentValue:e.target.value}) }} autosize />
                 <Button className={styles.commentBtn} type="primary" onClick={()=>{this.addComment(this.state.article.aid)}}>评论</Button>
               </div>
@@ -207,9 +235,7 @@ class singleArticle extends React.Component{
               </div>:
               <i onClick={this.openLogin}  className={"icon-QQ iconfont "+styles.logBtn}/>
             }
-
             </Card>
-
         </Card>
       </div>
 
@@ -220,7 +246,6 @@ class singleArticle extends React.Component{
 singleArticle.contextTypes = {
   router: React.PropTypes.object.isRequired
 };
-
 export default connect(({ IndexPage }) => ({
   IndexPage,
 }))(singleArticle);

@@ -24,7 +24,6 @@ class Comment{
                         pid:c.dataValues.pid
                     }
                 })
-                console.log(pc)
                 let pUsername=pc.dataValues.username
                 c.dataValues.pUsername=pUsername
             }

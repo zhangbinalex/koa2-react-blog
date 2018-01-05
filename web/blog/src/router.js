@@ -1,9 +1,9 @@
 import React from 'react';
 import { Router, Route,IndexRoute } from 'dva/router';
 import IndexPage from './routes/IndexPage/IndexPage';
-import Home from './routes/Home'
-import Article from './routes/Article'
-import SingleArticle from './routes/SingleArticle/SingleArticle'
+import Home from './routes/Home';
+import Article from './routes/Article';
+import SingleArticle from './routes/SingleArticle/SingleArticle';
 import SearchResult from "./routes/SearchResult/SearchResult";
 
 

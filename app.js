@@ -8,6 +8,7 @@ const blog=require('./routes/blog');
 const admin=require('./routes/admin');
 const session=require('koa-session2');
 const cors =require('koa2-cors');
+const logger=require('koa-logger');
 
 
 
@@ -23,7 +24,7 @@ app.use(async (ctx, next) => {
         ctx.app.emit('error', err, ctx);
     }
 });
-
+app.use(logger());
 
 //session存储
 app.use(session({
@@ -43,11 +44,12 @@ app.use(koaStatic('./web'));
 //body解析
 app.use(bodyParser({formLimit:'10mb'}));
 
-router.use('/', blog.routes(), blog.allowedMethods());
-router.use('/admin', admin.routes(), admin.allowedMethods());
+router.use('/', blog.routes());
+router.use('/admin', admin.routes());
 
 //路由分配
 app.use(router.routes(),router.allowedMethods());
 
+
 //监听服务
-app.listen(3000);
+app.listen(80);

@@ -28,7 +28,8 @@ export default {
       avatar:''
     },
     showDirectory:false,
-    directoryRefresh:''
+    directoryRefresh:'',
+    onBottom:false
   },
 
   subscriptions: {
@@ -51,47 +52,11 @@ export default {
       if(data.ret==1){
         yield put({type:'saveSetting',payload:data.data})
       }
-    },
-    *fetchComment({ payload }, { call, put }){
-      yield put({ type: 'showCommentLoading'});
-      const data=yield call(function request(){
-        return reqwest({
-          url:url+'comment/get',
-          data:{aid:payload.aid},
-          method:'get',
-        }).then((data)=>{return data})
-      });
-      if(data.ret==1){
-        if(data.data){
-         var commentList=data.data.map((comment,index)=>{
-            comment.replyContent=''
-           return comment
-         })
-        }else {
-          var commentList=[]
-        }
-        yield put({ type: 'showComment',payload:{commentList,commentLoading:false} });
-      }
-    },
-    *addComment({ payload }, { call, put }){
-      const data=yield call(function request(){
-        return reqwest({
-          url:url+'comment/add',
-          method:'post',
-          data:payload
-        }).then((data)=>{return data})
-
-      });
-      if(data.ret==1){
-        message.success('评论添加成功！')
-        yield put({type:'fetchComment',payload:{aid:payload.aid}})
-      }
     }
   },
 
   reducers: {
     saveSetting(state,{payload}){
-      console.log(payload)
       return {...state,setting:payload}
     },
     setUser(state,{payload}){
@@ -132,6 +97,9 @@ export default {
     },
     setDirectoryRefresh(state,{payload}){
       return {...state,directoryRefresh:payload}
+    },
+    setOnBottom(state,{payload}){
+      return {...state,onBottom:payload}
     },
   },
 

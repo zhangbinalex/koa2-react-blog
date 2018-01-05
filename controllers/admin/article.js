@@ -6,11 +6,15 @@ const Comment=require('../../models/Comment');
 
 async function findParents(resArr,obj) {
     const  pCategory=await Category.findOne({
-        where:{
-            cid:obj.dataValues.pid
-        }
+        where:{ cid : obj.dataValues.pid }
     });
-    if(pCategory){
+    if (pCategory&&pCategory.dataValues.cid!==1){
+        resArr.unshift(pCategory.dataValues.cid);
+        return  findParents(resArr,pCategory)
+    }else {
+        return resArr
+    }
+    /*if(pCategory){
         if(pCategory.dataValues.cid!==1){
             resArr.unshift(pCategory.dataValues.cid);
             return  findParents(resArr,pCategory)
@@ -19,15 +23,14 @@ async function findParents(resArr,obj) {
         }
     }else {
         return resArr
-    }
-
+    }*/
 }
 
 
 class Article {
     static async add(ctx){
         let postData=ctx.request.body;
-        let {title,author,keywords,description,is_original=1,is_top=0,is_show=1,article_tag=[],category}=postData;
+        let {title,content,author,keywords,description,is_original=1,is_top=0,is_show=1,article_tag=[],category}=postData;
         category=JSON.parse(category);
         let cid=category[category.length-1];
 
@@ -41,7 +44,7 @@ class Article {
         });
         //添加文章
         let article=await Arti.create({
-            title,author,keywords,description,is_original,is_top,is_show,cid
+            title,content,author,keywords,description,is_original,is_top,is_show,cid
         });
         //将文章和标签关联
         await  article.addTag(tags);
@@ -50,7 +53,7 @@ class Article {
 
     static async update(ctx){
         let postData=ctx.request.body;
-        let {aid,title,author,keywords,description,is_original=1,is_top=0,is_show=1,article_tag=[],category}=postData;
+        let {aid,content,title,author,keywords,description,is_original=1,is_top=0,is_show=1,article_tag=[],category}=postData;
         category=JSON.parse(category);
         let cid=category[category.length-1];
         //根据传来的标签数组查询标签
@@ -63,14 +66,13 @@ class Article {
         });
         //更新文章
         await Arti.update({
-            title,author,keywords,description,is_original,is_top,is_show,cid
+            title,author,content,keywords,description,is_original,is_top,is_show,cid
         },{
             where:{aid}
         });
         let article=await Arti.findOne({
             where:{aid}
         });
-        console.log(article)
         //将文章和标签关联
         await  article.setTags(tags);
         ctx.body={ret:1,msg:'文章更新成功！'}
@@ -90,38 +92,27 @@ class Article {
         //单篇文章查询
         if(ctx.query.aid){
             let aid=ctx.query.aid;
-            var article=await Arti.findOne({
+            let article=await Arti.findOne({
                 include: [Category,Tag,Comment],
-                where:{
-                    aid
-                }
+                where:{aid}
             });
-            if(ctx.query.type==='click'){
-                 await article.increment('click')
-            }
+            if(ctx.query.type==='click') await article.increment('click');
             article.dataValues.comment_count=article.comments.length;
-            if(article.dataValues.category){
-                if(article.dataValues.cid<=1){
-                    article.dataValues.categoryArr=[];
-                }else {
-                    article.dataValues.categoryArr=await findParents([article.dataValues.cid],article.dataValues.category);
-                }
-            }else {
-                article.dataValues.categoryArr=[];
-            }
-
+            article.dataValues.categoryArr=article.dataValues.category&&article.dataValues.cid>1?
+                await findParents([article.dataValues.cid],article.dataValues.category):[];
             ctx.body={data:article,ret:1}
         }else {
             //文章列表分页查询
             let size=parseInt(ctx.query.size)||20;
             let page=parseInt(ctx.query.page)||1;
-            let total=await  Arti.count();
+
+            let total=await Arti.count();
             let articles=await  Arti.findAll({
                 include:[Tag,Category,Comment],
                 limit:size,
+                order:[['create_time','DESC']],
                 offset:(page-1)*size
             });
-            console.log(articles[0].dataValues.category.cname)
             if(articles){
                 var res=articles.map((article)=>{
                     article.dataValues.tag=article.tags.map((tag)=>{
@@ -134,8 +125,6 @@ class Article {
             }
             ctx.body={data:res,ret:1,total}
         }
-
-
     }
 }
 module.exports=Article;
