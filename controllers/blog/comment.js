@@ -2,9 +2,9 @@ const comment = require('../../models/Comment');
 
 class Comment{
     static async add(ctx){
-        let {content,aid,username,avatar,type,pid=0}=ctx.request.body
+        let {content,aid,username,avatar,type,pid=0,uid=0}=ctx.request.body;
         await  comment.create({
-            content,aid,username,avatar,type,pid
+            content,aid,username,avatar,type,pid,uid
         });
         ctx.body={ret:1,msg:'评论添加成功！'}
     }
