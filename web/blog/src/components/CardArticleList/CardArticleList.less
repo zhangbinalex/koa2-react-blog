@@ -5,7 +5,6 @@
   font-size: 30px;
   padding-top: 100px;
 }
-
 .articleCard{
   &:hover{
     .apHover,.articleTitle{
@@ -27,6 +26,15 @@
     }
   }
 }
+@media screen and (max-width: 1400px){
+  .articleCard{
+    :global{
+      .ant-card-body{
+        padding: 40px 26px 24px 26px
+      }
+    }
+  }
+}
 .apHover{
   transition: left .3s ;
   position: relative;
@@ -36,6 +44,9 @@
   font-size: 18px;
   margin-bottom: 10px;
   font-weight: 700;
+  overflow: hidden;
+  text-overflow:ellipsis;
+  white-space: nowrap;
   .apHover;
 }
 .tagGroup{

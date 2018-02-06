@@ -6,7 +6,7 @@ export default {
   namespace: 'IndexPage',
 
   state: {
-    url:'http://www.guijianshi.cn/',
+    url:'http://www.zbzero.com/',
     showSider:true,
     commentList:[],
     commentLoading:false,

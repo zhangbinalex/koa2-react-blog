@@ -170,6 +170,11 @@ class IndexPage extends React.Component{
     const introduceInfo={
       ...this.props.IndexPage.setting
     }
+    const mainSpan=this.props.IndexPage.showSider?{
+      md:{span:16},xs:{span:23}
+    }:{
+      span:23
+    }
     return (
       <div  onMouseUp={this.slideOver} className={'clearfix '+styles.app} >
         {/*头部*/}
@@ -186,8 +191,8 @@ class IndexPage extends React.Component{
             title="目录" id="article" offset={52} style={{topAbs:380,topFix:60}} />:null}
 
 
-        <Col style={{marginTop:40}} span={14} offset={5}>
-          <Col   style={{minHeight:1000}} span={this.props.IndexPage.showSider?16:23} >
+        <Col style={{marginTop:40}} xs={{span:22,offset:1}} md={{span:18,offset:3}} lg={{span:16,offset:4}} xl={{span:14,offset:5}} >
+          <Col   style={{minHeight:1000}} {...mainSpan} >
             <div >
               {this.props.IndexPage.articleLoading?<Spin size="large" className={styles.spin} />:null}
               {this.props.children}
@@ -195,7 +200,7 @@ class IndexPage extends React.Component{
           </Col>
           {/*边栏*/}
           {this.props.IndexPage.showSider?
-            <Col className={styles.rContent} style={{overflow:'hidden'}} onMouseDown={this.slideInit} onMouseMove={this.sliding}  span={7} offset={1} >
+            <Col className={styles.rContent} style={{overflow:'hidden'}} onMouseDown={this.slideInit} onMouseMove={this.sliding}  xs={{span:0}} md={{span:7,offset:1}} xl={{span:7,offset:1}} lg={{span:7,offset:1}} >
               <div style={{position:'relative',left:this.state.moveX}} className={this.state.InitX?'':styles.transition} >
                 <TagList toTag={this.toTag }  tagList={this.state.tagList} />
                 <Introduce {...introduceInfo} />

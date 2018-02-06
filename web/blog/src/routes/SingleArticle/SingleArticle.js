@@ -70,12 +70,15 @@ class singleArticle extends React.Component{
     document.body.scrollTop=0;
     this.fetch(this.props.routeParams.id);
     this.fetchComment(this.props.routeParams.id)
+    QC.Login({
+      btnId:"qqLoginBtn"    //插入按钮的节点id
+    });
   }
   componentWillUnmount(){
     this.props.dispatch({type:'IndexPage/hideDirectory'})
   }
   openLogin=()=>{
-    window.open('https://graph.qq.com/oauth2.0/authorize?client_id=101419757&response_type=token&scope=all&redirect_uri=http%3A%2F%2Fwww.guijianshi.cn', 'oauth2Login_10262' ,'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes')
+    window.open('https://graph.qq.com/oauth2.0/show?which=Login&display=pc&client_id=101451783&response_type=token&scope=all&redirect_uri=http%3A%2F%2Fwww.zbzero.com', 'oauth2Login_10262' ,'height=525,width=585, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes')
   }
   logout=()=>{
     window.QC.Login.signOut()
@@ -90,7 +93,7 @@ class singleArticle extends React.Component{
         data:{
           content:cmid?replyContent:this.state.commentValue,
           aid,...this.props.IndexPage.userInfo,
-          pid:cmid?cmid:''}
+          pid:cmid?cmid:0}
       }).then((data)=>{
         if(data.ret){
           message.success('评论添加成功！')
@@ -234,6 +237,8 @@ class singleArticle extends React.Component{
                 </Dropdown>
               </div>:
               <i onClick={this.openLogin}  className={"icon-QQ iconfont "+styles.logBtn}/>
+
+
             }
             </Card>
         </Card>
