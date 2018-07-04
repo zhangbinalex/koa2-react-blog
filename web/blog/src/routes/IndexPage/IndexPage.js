@@ -100,10 +100,10 @@ class IndexPage extends React.Component{
       const bacList=data.data.map((item)=>{
         return {label:item.label,url:item.pic_url}
       });
-      bacList.push({label:'home',url:'http://i4.bvimg.com/608112/aa08b9ac86a5da5f.jpg'},
-        {label:'singleArticle',url:'http://i4.bvimg.com/608112/2217625fb504ba28.png'},
-        {label:'search',url:'http://i4.bvimg.com/608112/f5616d00d24645ea.png'},
-        {label:'tag',url:'http://i4.bvimg.com/608112/494cda5930835cef.png'});
+      bacList.push({label:'home',url:'https://zblog-assets.oss-cn-hangzhou.aliyuncs.com/blog_image/banner/anas-alshanti-169265-unsplash_meitu_41.jpg?x-oss-process=style/zbblog_banner'},
+        {label:'singleArticle',url:'https://zblog-assets.oss-cn-hangzhou.aliyuncs.com/blog_image/banner/ilya-pavlov-87438-unsplash_meitu_2.jpg?x-oss-process=style/zbblog_banner'},
+        {label:'search',url:'https://zblog-assets.oss-cn-hangzhou.aliyuncs.com/blog_image/banner/jeremy-bishop-98691-unsplash_meitu_7.jpg?x-oss-process=style/zbblog_banner'},
+        {label:'tag',url:'https://zblog-assets.oss-cn-hangzhou.aliyuncs.com/blog_image/banner/brady-frieden-365163-unsplash_meitu_9.jpg?x-oss-process=style/zbblog_banner'});
       this.setState({menuList,bacList})
     })
     reqwest({
