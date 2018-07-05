@@ -24,7 +24,7 @@ class Comment{
                         pid:c.dataValues.pid
                     }
                 })
-                let pUsername=pc.dataValues.username
+                let pUsername=pc.dataValues.username;
                 c.dataValues.pUsername=pUsername
             }
         }

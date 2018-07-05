@@ -85,6 +85,11 @@ class Article {
                 aid
             }
         });
+        await Comment.destroy({
+            where:{
+                aid
+            }
+        });
         ctx.body={ret:1,msg:'文章删除成功！'}
     }
 

@@ -13,7 +13,8 @@ class Comment{
             offset:size*(page-1)
         });
         const res=comments.map((comment,index)=>{
-            comment.dataValues.title= comment.article.title;
+            console.log(comment.article)
+            comment.dataValues.title= comment.article ? comment.article.title : '';
             return comment
         });
         ctx.body={ret:1,data:res}
